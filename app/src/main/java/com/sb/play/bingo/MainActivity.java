@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,6 +30,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.sb.play.bingo.models.BingoResponse;
+import com.sb.play.bingo.models.Emoji;
 import com.sb.play.bingo.models.Player;
 import com.sb.play.bingo.models.Room;
 import com.sb.play.bingo.models.Turn;
@@ -82,12 +85,18 @@ public class MainActivity extends AppCompatActivity {
     private Intent mainIntent;
     private Button roomIdToShareBottom;
     private TextView winnerAnnounce;
+    private TextView senderNameView;
     private Button roomIdToShareTop;
     private ConstraintLayout fireWorksLayout;
     private ImageView fireworks;
     volatile private boolean isRemoteTurnCompleted = false;
     private boolean playerGettingUpdated = false;
     private boolean isWinnerAnnounced;
+    private HorizontalScrollView stickerView;
+    private LinearLayout stickerHolderView;
+    private ImageView receivedEmojiImageView;
+    private LinearLayout receivedEmojiLayout;
+    private Long sendingEmojiTo;
 
     private static int getRandom(int max) {
         return (int) (Math.random() * max);
@@ -105,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         initializeSoundsAndEffects();
         //declaring vars
         initializeGameVariables();
+        initializeStickerView();
         onRoomCreation(bingoResponse);
         initialize();
     }
@@ -129,6 +139,11 @@ public class MainActivity extends AppCompatActivity {
     private void initializeGameVariables() {
         fireworks = findViewById(R.id.fireworks);
         fireWorksLayout = findViewById(R.id.fireWorksLayout);
+        receivedEmojiLayout = findViewById(R.id.recievedEmojiLayout);
+        stickerView = findViewById(R.id.stickersView);
+        senderNameView = findViewById(R.id.senderNameView);
+        receivedEmojiImageView = findViewById(R.id.recievedEmojiView);
+        stickerHolderView = findViewById(R.id.stickerHolderView);
         gameGrid = findViewById(R.id.gameGrid);
         bingoGrid = findViewById(R.id.bingoGrid);
         playerNameGrid = findViewById(R.id.playersNameGrid);
@@ -142,6 +157,19 @@ public class MainActivity extends AppCompatActivity {
         bingoResponse = (BingoResponse) mainIntent.getSerializableExtra("Response");
         gameType = mainIntent.getStringExtra(Constants.TYPE_OF_GAME);
         myName = getSharedPreferences(Constants.MY_APP_NAME, MODE_PRIVATE).getString(Constants.MY_NAME, Constants.UNKNOWN);
+    }
+
+    private void initializeStickerView() {
+        StickerClickListener stickerClickListener = new StickerClickListener();
+        for (String emojiName : BingoUtil.getEmojiNames(this)) {
+            ImageView current = new ImageView(this);
+            current.setTag(emojiName);
+            current.setImageResource(BingoUtil.getResourceIdForImage(emojiName, this));
+            current.setLayoutParams(new LinearLayout.LayoutParams(200, 200));
+            current.setScaleType(ImageView.ScaleType.FIT_XY);
+            current.setOnClickListener(stickerClickListener);
+            stickerHolderView.addView(current);
+        }
     }
 
     private void initializeSoundsAndEffects() {
@@ -193,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
         button.setTag(player.getId().toString());
         button.setClickable(false);
         button.setTextColor(Color.WHITE);
+        button.setOnLongClickListener(new SendStickerLongClickListener());
         return button;
     }
 
@@ -491,7 +520,7 @@ public class MainActivity extends AppCompatActivity {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND)
                 .setType("text/plain")
                 .putExtra(Intent.EXTRA_TEXT, "Click http://com.sb.bingo/joinroom?roomId=" + roomId + " to join!" +
-                        "\n Or enter: " + roomId+ " to join the room")
+                        "\n Or enter: " + roomId + " to join the room")
                 .putExtra(Intent.EXTRA_SUBJECT, "Click to join bingo:");
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
     }
@@ -596,6 +625,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class SendEmoji extends AsyncTask<String, String, String> {
+
+        private Long sender;
+        private Long receiver;
+        private String emoji;
+
+        public SendEmoji(Long sender, Long receiver, String emoji) {
+            this.sender = sender;
+            this.receiver = receiver;
+            this.emoji = emoji;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            backendService.sendEmoji(new Emoji(sender, receiver, emoji), room.getId());
+            return null;
+        }
+    }
+
     private class StartGame extends AsyncTask<String, String, BingoResponse> {
         @Override
         protected BingoResponse doInBackground(String... params) {
@@ -635,8 +683,9 @@ public class MainActivity extends AppCompatActivity {
             Looper.prepare();
             while (!localGameStatus.equals(Status.completed)) {
                 goToSleepMode();
-                BingoResponse response = backendService.polling(room.getId().toString());
+                BingoResponse response = backendService.polling(room.getId().toString(), mySelf.getId());
                 room = response.getRoom();
+                displayEmoji(response.getEmoji());
                 updatePlayerInfo(response.getPlayers());
                 alertGameStarted();
                 if (checkIfSomebodyWon()) break;
@@ -644,6 +693,15 @@ public class MainActivity extends AppCompatActivity {
                 updateGamePlay();
             }
             Log.i("Polling", "stopped" + localGameStatus.toString());
+        }
+
+        private void displayEmoji(Emoji emoji) {
+            if (emoji == null || !(localGameStatus.equals(Status.started) || localGameStatus.equals(Status.playingTurn))) {
+                return;
+            }
+            runOnUiThread(() -> {
+                showReceivedEmoji(emoji);
+            });
         }
 
         private void alertGameStarted() {
@@ -789,6 +847,62 @@ public class MainActivity extends AppCompatActivity {
                 thread.setPriority(Thread.MAX_PRIORITY);
                 runOnUiThread(thread);
             }
+        }
+    }
+
+    private class StickerClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            ImageView current = (ImageView) view;
+            setVisibilityForStickerView(false);
+            new SendEmoji(mySelf.getId(), sendingEmojiTo, current.getTag().toString()).execute();
+        }
+    }
+
+    private void showReceivedEmoji(Emoji emoji) {
+        new CountDownTimer(3000, 3000) {
+            public void onTick(long millisUntilFinished) {
+                receivedEmojiImageView.setImageResource(
+                        BingoUtil.getResourceIdForImage(emoji.getEmoji(), MainActivity.this));
+                senderNameView.setText(String.format("%s sent::", getPlayerNameFromId(emoji.getSender())));
+                receivedEmojiLayout.setVisibility(View.VISIBLE);
+            }
+
+            public void onFinish() {
+                receivedEmojiLayout.setVisibility(View.INVISIBLE);
+            }
+        }.start();
+    }
+
+    private String getPlayerNameFromId(Long playerId) {
+        String name = null;
+        for (Player player : allPlayers) {
+            if (player.getId().equals(playerId)) {
+                name = player.getName();
+                break;
+            }
+        }
+        return (name == null ? "someone" : name).toUpperCase();
+    }
+
+    private void setVisibilityForStickerView(boolean show) {
+        this.stickerView.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    private class SendStickerLongClickListener implements View.OnLongClickListener {
+        @Override
+        public boolean onLongClick(View view) {
+            if(view.getTag().toString().equals(mySelf.getId().toString())){
+                return false;
+            }
+            if (!(localGameStatus.equals(Status.started) || localGameStatus.equals(Status.playingTurn))) {
+                Toast.makeText(MainActivity.this, "Cannot send sticker before starting the game", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            Button current = (Button) view;
+            setVisibilityForStickerView(true);
+            sendingEmojiTo = new Long(view.getTag().toString());
+            return false;
         }
     }
 }
