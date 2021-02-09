@@ -2,6 +2,12 @@ package com.sb.play.util;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class BingoUtil {
     public static SQLiteDatabase getDatabase(Context context) {
@@ -11,5 +17,22 @@ public class BingoUtil {
                 Constants.DbConstants.PLAYERS_COLUMN, Constants.DbConstants.WINNER_COLUMN,
                 Constants.DbConstants.END_TIME_COLUMN));
         return bingoDatabase;
+    }
+
+    public static int getResourceIdForImage(String name, Context context) {
+        return context.getResources().getIdentifier(name, "drawable", context.getPackageName());
+    }
+
+    public static List<String> getEmojiNames(Context context) {
+        if (Constants.emojis.isEmpty()) {
+            try {
+                Constants.emojis.addAll(Arrays.asList(new ObjectMapper().readValue(
+                        context.getAssets()
+                                .open("emojis.json"), String[].class)));
+            } catch (Exception e) {
+                Log.e("Reading error", e.toString());
+            }
+        }
+        return Constants.emojis;
     }
 }

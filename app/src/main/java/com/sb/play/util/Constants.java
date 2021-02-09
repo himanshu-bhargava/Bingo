@@ -1,6 +1,10 @@
 package com.sb.play.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Constants {
+    protected static final List<String> emojis = new ArrayList<>();
     public static final String TYPE_OF_GAME = "typeOfGame";
     public static final String CREATED_ROOM = "createdRoom";
     public static final String ROOM_ID = "roomId";
@@ -18,5 +22,37 @@ public class Constants {
         public static final String PLAYERS_COLUMN = "players";
         public static final String WINNER_COLUMN = "winner";
         public static final String END_TIME_COLUMN = "endTime";
+    }
+
+
+
+    public static class LocalBackendParam extends BackendParam {
+
+        private final String URL = "http://192.168.1.2:8080/";
+
+        @Override
+        public String getRoomUrl() {
+            return URL + VERSION + "/room";
+        }
+
+        @Override
+        public String getEmojiUrl() {
+            return URL + VERSION + "/emoji";
+        }
+    }
+
+    public static class AwsBackendParam extends BackendParam {
+
+        private static final String URL = "http://bingobackendservice-env.eba-3ymgj4jd.us-east-2.elasticbeanstalk.com/";
+
+        @Override
+        public String getRoomUrl() {
+            return URL + VERSION + "/room";
+        }
+
+        @Override
+        public String getEmojiUrl() {
+            return URL + VERSION + "/emoji";
+        }
     }
 }

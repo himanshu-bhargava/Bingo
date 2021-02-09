@@ -8,6 +8,7 @@ public class BingoResponse implements Serializable {
 
     private List<Player> players = new ArrayList<>();
     private Room room;
+    private Emoji emoji;
 
     public List<Player> getPlayers() {
         return players;
@@ -23,6 +24,14 @@ public class BingoResponse implements Serializable {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public Emoji getEmoji() {
+        return emoji;
+    }
+
+    public void setEmoji(Emoji emoji) {
+        this.emoji = emoji;
     }
 
     @Override
