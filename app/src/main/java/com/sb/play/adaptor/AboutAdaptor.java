@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class AboutAdaptor extends RecyclerView.Adapter<AboutAdaptor.ViewHolder> {
 
-    private List<About> abouts;
-    private Context context;
+    private final List<About> abouts;
+    private final Context context;
 
     public AboutAdaptor(Context context, List<About> abouts) {
         this.abouts = abouts;

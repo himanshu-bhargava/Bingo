@@ -23,7 +23,7 @@
       "main": "You have two options to join the game:",
       "sub": [
         {
-          "main": "Tap on the link shared by your friend and it will join the game.",
+          "main": "1)Tap on the link shared by your friend and it will join the game.",
           "sub": [
             {
               "main": "Select the grid of your choice and the tap button 'JOIN ROOM'."
@@ -31,7 +31,7 @@
           ]
         },
         {
-          "main": "Enter the room id shared by your friend and tap button 'JOIN ROOM'.",
+          "main": "2)Enter the room id shared by your friend and tap button 'JOIN ROOM'.",
           "sub": [
             {
               "main": "Select the grid of your choice and the tap button 'JOIN ROOM'."
@@ -59,7 +59,7 @@
           "main": "Simple: Create a grid with numbers filled sequentially."
         },
         {
-          "main": "Custom: Create a blank grid, start tapping on the grid to fill numbers the way you want."
+          "main": "Custom: Create a blank grid, start tapping on the grid boxes one by one to fill numbers in the way you want."
         }
       ]
     }
@@ -67,7 +67,19 @@
   {
     "question": "Who wins the game?",
     "answer": {
-      "main": "Anyone who crosses 5 lines(horizontal, vertical, diagonal) first, wins the game."
+      "main": "Anyone who crosses 5 lines(horizontal, vertical, diagonal) first wins the game."
+    }
+  },
+  {
+    "question": "Whose turn is it?",
+    "answer": {
+      "main": "Red color on name will indicate players's turn and if your phone vibrates then it's your turn."
+    }
+  },
+  {
+    "question": "How to sent stickers?",
+    "answer": {
+      "main": "Just tap on any player's name and you will see bunch of nice stickers to send."
     }
   },
   {

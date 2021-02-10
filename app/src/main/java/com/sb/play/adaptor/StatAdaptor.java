@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class StatAdaptor extends RecyclerView.Adapter<StatAdaptor.ViewHolder> {
 
-    private List<Stat> stats;
+    private final List<Stat> stats;
 
     public StatAdaptor(Context context, List<Stat> stats) {
         this.stats = stats;

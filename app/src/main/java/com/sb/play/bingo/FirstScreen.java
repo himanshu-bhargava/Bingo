@@ -50,7 +50,7 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
         createRoomButton = findViewById(R.id.createRoom);
         joinRoomButton = findViewById(R.id.joinRoom);
         roomId = findViewById(R.id.roomId);
-        myNameEditText = (EditText) findViewById(R.id.myNameEditText);
+        myNameEditText = findViewById(R.id.myNameEditText);
         sharedPreferences = getSharedPreferences(Constants.MY_APP_NAME, Context.MODE_PRIVATE);
         Log.i("Test", "" + myNameEditText.getText());
         fetchAndAssignSavedName();

@@ -103,7 +103,6 @@
                 android:ems="10"
                 android:hint="Enter Room Id"
                 android:inputType="number"
-                android:onClick="about"
                 android:textAlignment="center"
                 android:textColor="#F3FFFFFF"
                 android:textColorHint="#FFFFFF" />
