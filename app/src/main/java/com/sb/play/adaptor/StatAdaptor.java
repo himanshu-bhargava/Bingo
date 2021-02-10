@@ -40,7 +40,7 @@ public class StatAdaptor extends RecyclerView.Adapter<StatAdaptor.ViewHolder> {
     @NonNull
     @Override
     public StatAdaptor.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_view, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.stat_list_view, viewGroup, false);
         return new ViewHolder(view);
     }
 

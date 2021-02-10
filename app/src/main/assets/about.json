@@ -1,0 +1,85 @@
+[
+  {
+    "question": "How to save your name?",
+    "answer": {
+      "main": "Tap on the text-box 'ENTER YOUR NAME', enter your name and then press 'SAVE NAME'."
+    }
+  },
+  {
+    "question": "How to create room?",
+    "answer": {
+      "main": "Tap on the button 'CREATE ROOM' and a new room will be created. Share the room id to others and wait for them to join."
+    }
+  },
+  {
+    "question": "How to start the game?",
+    "answer": {
+      "main": "The player who created the game will have the option to start the game, once 2 or more players have joined he/she can start."
+    }
+  },
+  {
+    "question": "How to join room?",
+    "answer": {
+      "main": "You have two options to join the game:",
+      "sub": [
+        {
+          "main": "Tap on the link shared by your friend and it will join the game.",
+          "sub": [
+            {
+              "main": "Select the grid of your choice and the tap button 'JOIN ROOM'."
+            }
+          ]
+        },
+        {
+          "main": "Enter the room id shared by your friend and tap button 'JOIN ROOM'.",
+          "sub": [
+            {
+              "main": "Select the grid of your choice and the tap button 'JOIN ROOM'."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "question": "How to share the room id?",
+    "answer": {
+      "main": "Once you create/join room, click on the 'share room' button."
+    }
+  },
+  {
+    "question": "Which grid to select?",
+    "answer": {
+      "main": "Once you join/create room, you have 3 different types of grid to select:",
+      "sub": [
+        {
+          "main": "Random: Create a grid with numbers filled randomly."
+        },
+        {
+          "main": "Simple: Create a grid with numbers filled sequentially."
+        },
+        {
+          "main": "Custom: Create a blank grid, start tapping on the grid to fill numbers the way you want."
+        }
+      ]
+    }
+  },
+  {
+    "question": "Who wins the game?",
+    "answer": {
+      "main": "Anyone who crosses 5 lines(horizontal, vertical, diagonal) first, wins the game."
+    }
+  },
+  {
+    "question": "How many player can play in one room?",
+    "answer": {
+      "main": "At least 2 players are required to play, and at most 4 can join."
+    }
+  },
+  {
+    "question": "What's 'CHECK STATS'?",
+    "answer": {
+      "main": "Game Stats option is there to check your previous played games' records."
+    }
+  }
+]

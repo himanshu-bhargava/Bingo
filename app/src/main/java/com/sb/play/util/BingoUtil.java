@@ -5,7 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sb.play.bingo.models.About;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,5 +36,11 @@ public class BingoUtil {
             }
         }
         return Constants.emojis;
+    }
+
+    public static List<About> readQuesAnswer(Context context) throws IOException {
+        return Arrays.asList(new ObjectMapper().readValue(
+                context.getAssets()
+                        .open("about.json"), About[].class));
     }
 }
