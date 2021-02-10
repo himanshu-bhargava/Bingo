@@ -55,7 +55,7 @@ import androidx.gridlayout.widget.GridLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final boolean crossed[][] = new boolean[5][5];
+    private final boolean[][] crossed = new boolean[5][5];
     private final Position[] positions = new Position[25];
     BingoResponse bingoResponse;
     MediaPlayer mediaPlayerClick;
@@ -64,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mediaPlayerLost;
     Vibrator v;
     Animation rotate;
-    private BackendService backendService = new BackendService();
-    private Set<Player> allPlayers = Collections.synchronizedSet(new HashSet<>());
+    private final BackendService backendService = new BackendService();
+    private final Set<Player> allPlayers = Collections.synchronizedSet(new HashSet<>());
     private String myName;
     private String gameType;
     volatile private Status localGameStatus = Status.loading;
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         button.setTag(player.getId().toString());
         button.setClickable(false);
         button.setTextColor(Color.WHITE);
-        button.setOnLongClickListener(new SendStickerLongClickListener());
+        button.setOnClickListener(new SendStickerClickListener());
         return button;
     }
 
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
                     Constants.DbConstants.TABLE_NAME,
                     mainIntent.getStringExtra(Constants.ROOM_ID),
                     getAllPlayersNameAsString(),
-                    winner, String.valueOf(System.currentTimeMillis())));
+                    winner, System.currentTimeMillis()));
             Log.i("stat", "updateStats: stats updated successfully");
         } catch (Exception e) {
             Log.e("error", "Could not update stats", e);
@@ -485,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkAndIncrementBingoCounter() {
         if (!isBingoCompleted()) {
             bingoCounter++;
-            Button thisButton = (Button) bingoGrid.findViewWithTag(String.valueOf(bingoCounter));
+            Button thisButton = bingoGrid.findViewWithTag(String.valueOf(bingoCounter));
             thisButton.setBackgroundTintMode(PorterDuff.Mode.DARKEN);
             rotateView(thisButton);
             thisButton.setBackgroundTintList(new ColorStateList(new int[][]{{}}, new int[]{Color.RED, Color.CYAN}));
@@ -562,8 +562,8 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    static private enum Status {
-        loading, initializing, joining, started, playingTurn, completed;
+    private enum Status {
+        loading, initializing, joining, started, playingTurn, completed
     }
 
     private static class Position {
@@ -627,9 +627,9 @@ public class MainActivity extends AppCompatActivity {
 
     private class SendEmoji extends AsyncTask<String, String, String> {
 
-        private Long sender;
-        private Long receiver;
-        private String emoji;
+        private final Long sender;
+        private final Long receiver;
+        private final String emoji;
 
         public SendEmoji(Long sender, Long receiver, String emoji) {
             this.sender = sender;
@@ -780,7 +780,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Button thisButton = (Button) playerNameGrid.findViewWithTag(player.getId().toString());
+                            Button thisButton = playerNameGrid.findViewWithTag(player.getId().toString());
                             thisButton.setBackgroundTintMode(PorterDuff.Mode.DARKEN);
                             thisButton.setBackgroundTintList(new ColorStateList(new int[][]{{}}, new int[]{Color.RED, Color.CYAN}));
                         }
@@ -789,7 +789,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Button thisButton = (Button) playerNameGrid.findViewWithTag(player.getId().toString());
+                            Button thisButton = playerNameGrid.findViewWithTag(player.getId().toString());
                             thisButton.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
                             thisButton.setTextColor(Color.BLACK);
                         }
@@ -889,20 +889,20 @@ public class MainActivity extends AppCompatActivity {
         this.stickerView.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
-    private class SendStickerLongClickListener implements View.OnLongClickListener {
+    private class SendStickerClickListener implements View.OnClickListener {
         @Override
-        public boolean onLongClick(View view) {
-            if(view.getTag().toString().equals(mySelf.getId().toString())){
-                return false;
+        public void onClick(View view) {
+            if (view.getTag().toString().equals(mySelf.getId().toString())) {
+                return;
             }
             if (!(localGameStatus.equals(Status.started) || localGameStatus.equals(Status.playingTurn))) {
                 Toast.makeText(MainActivity.this, "Cannot send sticker before starting the game", Toast.LENGTH_SHORT).show();
-                return false;
+                return;
             }
+            receivedEmojiLayout.setVisibility(View.INVISIBLE);
             Button current = (Button) view;
             setVisibilityForStickerView(true);
             sendingEmojiTo = new Long(view.getTag().toString());
-            return false;
         }
     }
 }

@@ -16,8 +16,8 @@ import org.springframework.web.client.RestTemplate;
 public class BackendService {
 
     public static String name;
-    private RestTemplate restTemplate;
-    private BackendParam backendParam = new Constants.AwsBackendParam();
+    private final RestTemplate restTemplate;
+    private final BackendParam backendParam = new Constants.AwsBackendParam();
 
     public BackendService() {
         restTemplate = new RestTemplate(true);
