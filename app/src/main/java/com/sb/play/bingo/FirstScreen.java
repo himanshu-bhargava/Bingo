@@ -149,4 +149,8 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
         Intent idIntent = new Intent(getApplicationContext(), GameStats.class);
         startActivity(idIntent);
     }
+    public void about(View view){
+        Intent intent=new Intent(this,AboutGame.class);
+        startActivity(intent);
+    }
 }

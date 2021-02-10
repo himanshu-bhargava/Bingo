@@ -23,6 +23,7 @@ public class GameStats extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_stats);
+        getSupportActionBar().setTitle("Game Statistics");
         List<Stat> statList = new ArrayList<>();
         try {
             SQLiteDatabase bingoDatabase = BingoUtil.getDatabase(this);
