@@ -4,6 +4,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
 import com.sb.play.adaptor.StatAdaptor;
 import com.sb.play.bingo.models.Stat;
@@ -19,14 +22,42 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class GameStats extends AppCompatActivity {
 
+    private TableLayout overallStatView;
+    private TextView totalTextView;
+    private TextView wonTextView;
+    private TextView lostTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_stats);
         getSupportActionBar().setTitle("Game Statistics");
+
+        overallStatView = findViewById(R.id.overallStatView);
+        totalTextView = findViewById(R.id.totalTextView);
+        wonTextView = findViewById(R.id.wonTextView);
+        lostTextView = findViewById(R.id.lostTextView);
+        SQLiteDatabase bingoDatabase = BingoUtil.getDatabase(this);
+        try {
+            Cursor c = bingoDatabase.rawQuery(String.format("SELECT COUNT(*) FROM %s", Constants.DbConstants.TABLE_NAME), null);
+            c.moveToNext();
+            long total = c.getLong(0);
+
+            c = bingoDatabase.rawQuery(String.format("SELECT COUNT(*) FROM %s where winner='%s'",
+                    Constants.DbConstants.TABLE_NAME, "You"), null);
+            c.moveToNext();
+            long won = c.getLong(0);
+
+            totalTextView.setText(String.valueOf(total));
+            wonTextView.setText(String.valueOf(won));
+            lostTextView.setText(String.valueOf(total - won));
+        } catch (Exception e) {
+            Log.e("Error", "onCreate: Could not calculate the overall stat", e);
+            overallStatView.setVisibility(View.GONE);
+        }
+
         List<Stat> statList = new ArrayList<>();
         try {
-            SQLiteDatabase bingoDatabase = BingoUtil.getDatabase(this);
             Cursor c = bingoDatabase.rawQuery(String.format("SELECT * FROM %s ORDER BY %s DESC LIMIT 200",
                     Constants.DbConstants.TABLE_NAME,
                     Constants.DbConstants.ROOM_ID_COLUMN), null);
