@@ -1,11 +1,8 @@
 package com.sb.play.bingo;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -15,24 +12,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.sb.play.bingo.models.BingoResponse;
+import com.sb.play.asynctasks.CreateRoom;
 import com.sb.play.bingo.services.BackendService;
+import com.sb.play.media.MusicMedia;
+import com.sb.play.util.BingoUtil;
 import com.sb.play.util.Constants;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class FirstScreen extends AppCompatActivity implements View.OnKeyListener {
 
-    private static final String DEFAULT_NAME = "unknown";
-    public static String myName;
-    private final BackendService backendService = new BackendService();
-    Button createRoomButton;
-    Button joinRoomButton;
-    EditText myNameEditText;
-    EditText roomId;
-    SharedPreferences sharedPreferences;
-    MediaPlayer mediaPlayer;
+    private static final String TAG = "First screen: ";
+
+    private BackendService backendService;
+
+    private Button createRoomButton;
+    private Button joinRoomButton;
+    private EditText myNameEditText;
+    private EditText roomId;
+    private SharedPreferences sharedPreferences;
+
+    private MusicMedia musicMedia;
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -47,19 +47,27 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_screen);
+        initialize();
+    }
+
+    private void initialize() {
+        sharedPreferences = getSharedPreferences(Constants.MY_APP_NAME, Context.MODE_PRIVATE);
+        musicMedia = new MusicMedia(this);
+        backendService = new BackendService(this);
+        initializeUiContent();
+        fetchAndAssignSavedName();
+    }
+
+    private void initializeUiContent() {
         createRoomButton = findViewById(R.id.createRoom);
         joinRoomButton = findViewById(R.id.joinRoom);
         roomId = findViewById(R.id.roomId);
         myNameEditText = findViewById(R.id.myNameEditText);
-        sharedPreferences = getSharedPreferences(Constants.MY_APP_NAME, Context.MODE_PRIVATE);
-        Log.i("Test", "" + myNameEditText.getText());
-        fetchAndAssignSavedName();
     }
 
     private void fetchAndAssignSavedName() {
-        Log.i("fetchAndAssignSavedName", "fetching existing name");
-        myName = sharedPreferences.getString(Constants.MY_NAME, DEFAULT_NAME);
-        saveNameInMemory(myName);
+        Log.i(TAG, "fetching existing name");
+        String myName = sharedPreferences.getString(Constants.MY_NAME, Constants.DEFAULT_NAME);
         saveNameInMemory(myName);
         myNameEditText.setText(myName);
     }
@@ -69,8 +77,7 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
     }
 
     public void submitUserName(View view) {
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.click);
-        mediaPlayer.start();
+        musicMedia.playClick();
         if (myNameEditText == null) {
             Toast.makeText(this, "Not initialized yet", Toast.LENGTH_SHORT).show();
         }
@@ -79,78 +86,35 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
             Toast.makeText(this, "Please enter a name with length>4", Toast.LENGTH_SHORT).show();
             return;
         }
-        myName = updatedName.toString();
         saveNameInMemory(updatedName.toString());
-        new AlertDialog.Builder(this).setMessage("Saved your name!").create().show();
+        BingoUtil.createSimpleAlert(this, "Saved your name!").show();
     }
 
     public void joinRoom(View view) {
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.click);
-        mediaPlayer.start();
+        musicMedia.playClick();
         String roomIdNumber = roomId.getText().toString();
         if (roomIdNumber.isEmpty()) {
-            new AlertDialog.Builder(this).setMessage("Please enter a room id!!!").show();
+            BingoUtil.createSimpleAlert(this, "Please enter a room id!!!").show();
             return;
         }
-        Intent idIntent = new Intent(getApplicationContext(), MainActivity.class);
-        idIntent.putExtra(Constants.ROOM_ID, roomIdNumber);
+        //clear room id
         roomId.setText("");
-        startActivity(idIntent);
+        startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra(Constants.ROOM_ID, roomIdNumber));
     }
 
     public void createRoom(View view) {
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.click);
-        mediaPlayer.start();
-        Log.i("create room", "createRoom: here");
-        new CreateRoom().execute();
+        musicMedia.playClick();
+        Log.i(TAG, "createRoom: creating room");
+        new CreateRoom(this, backendService).execute();
     }
 
-    private AlertDialog.Builder createSimpleAlert(String input) {
-        return new AlertDialog.Builder(FirstScreen.this).setMessage(input);
+    public void launchStatActivity(View view) {
+        Log.i(TAG, "launchStatActivity: launching stats activity");
+        startActivity(new Intent(getApplicationContext(), GameStats.class));
     }
 
-    private class CreateRoom extends AsyncTask<String, String, BingoResponse> {
-        AlertDialog popUp;
-
-        @Override
-        protected BingoResponse doInBackground(String... params) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    popUp = createSimpleAlert("Room creation in progress!").show();
-                }
-            });
-            BackendService.name = myName;
-            BingoResponse response = backendService.createRoom();
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(final BingoResponse bingoResponse) {
-            super.onPostExecute(bingoResponse);
-            popUp.dismiss();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (bingoResponse == null) {
-                        createSimpleAlert("Could not create the room please try again later!!!");
-                        return;
-                    }
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("Response", bingoResponse);
-                    intent.putExtra(Constants.TYPE_OF_GAME, Constants.CREATED_ROOM);
-                    intent.putExtra(Constants.ROOM_ID, bingoResponse.getRoom().getId().toString());
-                    startActivity(intent);
-                }
-            });
-        }
-    }
-    public void launchStatActivity(View view){
-        Intent idIntent = new Intent(getApplicationContext(), GameStats.class);
-        startActivity(idIntent);
-    }
-    public void about(View view){
-        Intent intent=new Intent(this,AboutGame.class);
-        startActivity(intent);
+    public void launchAboutActivity(View view) {
+        Log.i(TAG, "launchAboutActivity: launching about activity");
+        startActivity(new Intent(this, AboutGame.class));
     }
 }

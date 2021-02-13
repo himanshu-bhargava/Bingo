@@ -1,5 +1,6 @@
 package com.sb.play.bingo.services;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.sb.play.bingo.models.BingoResponse;
@@ -7,6 +8,7 @@ import com.sb.play.bingo.models.Emoji;
 import com.sb.play.bingo.models.Request;
 import com.sb.play.bingo.models.Room;
 import com.sb.play.bingo.models.Turn;
+import com.sb.play.util.AwsBackendParam;
 import com.sb.play.util.BackendParam;
 import com.sb.play.util.Constants;
 
@@ -15,11 +17,13 @@ import org.springframework.web.client.RestTemplate;
 
 public class BackendService {
 
-    public static String name;
+    private static String name;
     private final RestTemplate restTemplate;
-    private final BackendParam backendParam = new Constants.AwsBackendParam();
+    private final BackendParam backendParam = new AwsBackendParam();
 
-    public BackendService() {
+    public BackendService(Context context) {
+        name = context.getSharedPreferences(Constants.MY_APP_NAME, Context.MODE_PRIVATE)
+                .getString(Constants.MY_NAME, Constants.DEFAULT_NAME);
         restTemplate = new RestTemplate(true);
     }
 

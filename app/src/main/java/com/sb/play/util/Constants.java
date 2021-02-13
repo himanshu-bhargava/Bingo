@@ -11,9 +11,10 @@ public class Constants {
     public static final String COLOR_ACTIVE = "#7EA7DC";
     public static final String tagPattern = "%d,%d";
     public static final String MY_APP_NAME = "bingo";
-    public static final long POLLING_CYCLE_TIME = 250;
-    public static final String UNKNOWN = "unknown";
+    public static final String DEFAULT_NAME = "unknown";
     public static final String MY_NAME = "myName";
+    public static final long POLLING_CYCLE_TIME = 250;
+    public static final String RESPONSE = "Response";
 
     public static class DbConstants {
         public static final String DB_NAME = "bingoDB";
@@ -24,35 +25,4 @@ public class Constants {
         public static final String END_TIME_COLUMN = "endTime";
     }
 
-
-
-    public static class LocalBackendParam extends BackendParam {
-
-        private final String URL = "http://192.168.1.2:8080/";
-
-        @Override
-        public String getRoomUrl() {
-            return URL + VERSION + "/room";
-        }
-
-        @Override
-        public String getEmojiUrl() {
-            return URL + VERSION + "/emoji";
-        }
-    }
-
-    public static class AwsBackendParam extends BackendParam {
-
-        private static final String URL = "http://bingobackendservice-env.eba-3ymgj4jd.us-east-2.elasticbeanstalk.com/";
-
-        @Override
-        public String getRoomUrl() {
-            return URL + VERSION + "/room";
-        }
-
-        @Override
-        public String getEmojiUrl() {
-            return URL + VERSION + "/emoji";
-        }
-    }
 }

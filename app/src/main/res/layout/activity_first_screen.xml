@@ -131,7 +131,7 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="about"
+        android:onClick="launchAboutActivity"
         android:text="About "
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
