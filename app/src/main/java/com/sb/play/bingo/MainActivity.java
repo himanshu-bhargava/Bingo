@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             mainIntent.putExtra(Constants.ROOM_ID, String.valueOf(id));
         } catch (Exception e) {
             Log.e("Error ", "Could not join the game via link");
-            Toast.makeText(this, "Invalid room id!!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid room id!", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayerClick.start();
         if (Constants.CREATED_ROOM.equals(gameType)) {
             if (allPlayers.size() < 2) {
-                Toast.makeText(this, "Wait for others to join!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Wait for others to join!", Toast.LENGTH_SHORT).show();
                 return;
             }
             new StartGame().execute(room.getId().toString());
@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
         isWinnerAnnounced = true;
         Glide.with(this).load(R.raw.sparkles).into(fireworks);
         fireWorksLayout.setVisibility(View.VISIBLE);
-        winnerAnnounce.setText(name + " won!!!");
+        winnerAnnounce.setText(name + " won!");
     }
 
     private void updateStats(String winner) {
@@ -667,7 +667,7 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(MainActivity.this, "Game started!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Game started!", Toast.LENGTH_SHORT).show();
                 }
             });
             isMyTurn = true;
@@ -710,7 +710,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(MainActivity.this, "Game started!!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Game started!", Toast.LENGTH_SHORT).show();
                         vibrateAlert();
                         roomIdToShareBottom.setVisibility(View.GONE);
                     }
@@ -896,7 +896,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             if (!(localGameStatus.equals(Status.started) || localGameStatus.equals(Status.playingTurn))) {
-                Toast.makeText(MainActivity.this, "Cannot send sticker before starting the game", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Cannot send sticker now!", Toast.LENGTH_SHORT).show();
                 return;
             }
             receivedEmojiLayout.setVisibility(View.INVISIBLE);
