@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.sb.play.bingo.MainActivity;
+import com.sb.play.bingo.R;
 import com.sb.play.bingo.models.BingoResponse;
 
 public class JoinRoom extends AsyncTask<String, String, BingoResponse> {
@@ -28,7 +29,7 @@ public class JoinRoom extends AsyncTask<String, String, BingoResponse> {
                 @Override
                 public void run() {
                     context.setLocalGameStatus(com.sb.play.bingo.models.Status.completed);
-                    Toast.makeText(context, "Could not join the room!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.could_not_join_room, Toast.LENGTH_SHORT).show();
                     context.finish();
                 }
             });
@@ -39,7 +40,7 @@ public class JoinRoom extends AsyncTask<String, String, BingoResponse> {
             context.setPlayerGettingUpdated(true);
             context.updatePlayersGrid();
             context.setLocalGameStatus(com.sb.play.bingo.models.Status.joining);
-            Toast.makeText(context, "Game joined successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.game_joined_successfully, Toast.LENGTH_SHORT).show();
         }
     }
 }

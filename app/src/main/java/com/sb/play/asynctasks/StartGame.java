@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.sb.play.bingo.MainActivity;
+import com.sb.play.bingo.R;
 import com.sb.play.bingo.models.BingoResponse;
 
 public class StartGame extends AsyncTask<String, String, BingoResponse> {
@@ -28,7 +29,7 @@ public class StartGame extends AsyncTask<String, String, BingoResponse> {
                 @Override
                 public void run() {
                     context.setLocalGameStatus(com.sb.play.bingo.models.Status.completed);
-                    Toast.makeText(context, "Could not start the game!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.could_not_start_game, Toast.LENGTH_SHORT).show();
                     context.finish();
                 }
             });
@@ -36,7 +37,7 @@ public class StartGame extends AsyncTask<String, String, BingoResponse> {
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, "Game started!!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.game_started, Toast.LENGTH_SHORT).show();
             }
         });
         context.setMyTurn(true);

@@ -3,6 +3,7 @@ package com.sb.play.bingo;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ public class AboutGame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_game);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("About");
+        actionBar.setDisplayHomeAsUpEnabled(true);
         readQuesAns();
         ((TextView) findViewById(R.id.versionView)).setText(getVersion());
         RecyclerView recyclerView = findViewById(R.id.aboutListHolderLayout);
@@ -33,6 +34,11 @@ public class AboutGame extends AppCompatActivity {
         recyclerView.setAdapter(new AboutAdaptor(this, readQuesAns()));
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1,
                 GridLayoutManager.VERTICAL, false));
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return false;
     }
 
     private List<About> readQuesAns() {

@@ -47,21 +47,6 @@
     </HorizontalScrollView>
 
     <LinearLayout
-        android:id="@+id/playersNameGrid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:foregroundGravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05">
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/recievedEmojiLayout"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -100,7 +85,7 @@
         android:layout_marginEnd="10dp"
         android:lines="4"
         android:singleLine="false"
-        android:text="Please select type of \n grid for Bingo"
+        android:text="@string/please_select_type_of_n_grid_for_bingo"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="35sp"
@@ -140,7 +125,6 @@
             android:foregroundGravity="center_horizontal"
             android:gravity="center_horizontal|center_vertical"
             android:shadowColor="#DD6161"
-            android:text="saurav"
             android:textAlignment="gravity"
             android:textAllCaps="false"
             android:textColor="#FAFAFA"
@@ -161,7 +145,7 @@
             android:foregroundGravity="center_horizontal"
             android:gravity="center_horizontal"
             android:shadowColor="#DD6161"
-            android:text="Tap anywhere to go back"
+            android:text="@string/tap_anywhere_to_go_back"
             android:textAlignment="gravity"
             android:textAllCaps="false"
             android:textColor="#FAFAFA"
@@ -176,6 +160,21 @@
             app:layout_constraintVertical_bias="0.97" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/playersNameGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05">
+
+    </LinearLayout>
 
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/gridLayout"
@@ -197,7 +196,7 @@
             android:layout_marginRight="3dp"
             android:background="@drawable/rectangle_button"
             android:onClick="userInitialize"
-            android:text="Custom"
+            android:text="@string/custom"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:visibility="visible"
@@ -212,7 +211,7 @@
             android:layout_marginRight="3dp"
             android:background="@drawable/rectangle_button"
             android:onClick="randomInitialize"
-            android:text="Random"
+            android:text="@string/random"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
             android:visibility="visible"
@@ -227,7 +226,7 @@
             android:layout_marginRight="3dp"
             android:background="@drawable/rectangle_button"
             android:onClick="regularInitialize"
-            android:text="Simple"
+            android:text="@string/simple"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
@@ -247,7 +246,7 @@
             android:onClick="startGame"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="Start Game"
+            android:text="@string/start_game"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="15sp"

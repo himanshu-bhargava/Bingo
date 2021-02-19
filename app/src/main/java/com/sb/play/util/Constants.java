@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Constants {
     protected static final List<String> emojis = new ArrayList<>();
+    public static final String YOU = "you";
     public static final String TYPE_OF_GAME = "typeOfGame";
     public static final String CREATED_ROOM = "createdRoom";
     public static final String ROOM_ID = "roomId";

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.sb.play.bingo.MainActivity;
+import com.sb.play.bingo.R;
 import com.sb.play.bingo.models.BingoResponse;
 import com.sb.play.bingo.models.Emoji;
 import com.sb.play.bingo.models.Player;
@@ -67,7 +68,7 @@ public class Polling extends Thread {
             context.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(context, "Game started!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.game_started, Toast.LENGTH_SHORT).show();
                     context.getVibrationMedia().vibrate();
                     context.getRoomIdToShareBottom().setVisibility(View.GONE);
                 }
@@ -179,7 +180,8 @@ public class Polling extends Thread {
                     context.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            context.popWinnerAlert(player.equals(context.getMySelf()) ? "You" : player.getName());
+                            context.popWinnerAlert(player.equals(context.getMySelf()) ?
+                                    context.getString(R.string.you) : player.getName());
                         }
                     });
                     break;

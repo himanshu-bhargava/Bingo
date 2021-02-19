@@ -79,22 +79,22 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
     public void submitUserName(View view) {
         musicMedia.playClick();
         if (myNameEditText == null) {
-            Toast.makeText(this, "Not initialized yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,getString(R.string.please_enter_name), Toast.LENGTH_SHORT).show();
         }
         Object updatedName = myNameEditText.getText().toString();
-        if (updatedName == null || updatedName.toString().length() < 4) {
-            Toast.makeText(this, "Please enter a name with length>4", Toast.LENGTH_SHORT).show();
+        if (updatedName == null || updatedName.toString().length() < 2) {
+            Toast.makeText(this, R.string.Please_enter_name_greater_than_1, Toast.LENGTH_SHORT).show();
             return;
         }
         saveNameInMemory(updatedName.toString());
-        BingoUtil.createSimpleAlert(this, "Saved your name!").show();
+        BingoUtil.createSimpleAlert(this, getString(R.string.saved_your_name)).show();
     }
 
     public void joinRoom(View view) {
         musicMedia.playClick();
         String roomIdNumber = roomId.getText().toString();
         if (roomIdNumber.isEmpty()) {
-            BingoUtil.createSimpleAlert(this, "Please enter a room id!!!").show();
+            BingoUtil.createSimpleAlert(this, getString(R.string.please_enter_room_id)).show();
             return;
         }
         //clear room id

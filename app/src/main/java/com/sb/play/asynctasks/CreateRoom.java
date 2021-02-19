@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 
 import com.sb.play.bingo.MainActivity;
+import com.sb.play.bingo.R;
 import com.sb.play.bingo.models.BingoResponse;
 import com.sb.play.bingo.services.BackendService;
 import com.sb.play.util.BingoUtil;
@@ -27,7 +28,7 @@ public class CreateRoom extends AsyncTask<String, String, BingoResponse> {
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                popUp = BingoUtil.createSimpleAlert(context, "Room creation in progress!").show();
+                popUp = BingoUtil.createSimpleAlert(context, context.getString(R.string.room_creation_in_progress)).show();
             }
         });
         BingoResponse response = backendService.createRoom();
@@ -42,7 +43,7 @@ public class CreateRoom extends AsyncTask<String, String, BingoResponse> {
             @Override
             public void run() {
                 if (bingoResponse == null) {
-                    BingoUtil.createSimpleAlert(context, "Could not create the room please try again later!!!");
+                    BingoUtil.createSimpleAlert(context, context.getString(R.string.could_not_create_room_try_later));
                     return;
                 }
                 Intent intent = new Intent(context, MainActivity.class);

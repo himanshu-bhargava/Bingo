@@ -19,7 +19,7 @@ public class SendStickerClickListener implements View.OnClickListener {
             return;
         }
         if (!(context.getLocalGameStatus().equals(Status.started) || context.getLocalGameStatus().equals(Status.playingTurn))) {
-            Toast.makeText(context, "Cannot send sticker before starting the game", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Cannot send sticker now!", Toast.LENGTH_SHORT).show();
             return;
         }
         context.getReceivedEmojiLayout().setVisibility(View.INVISIBLE);

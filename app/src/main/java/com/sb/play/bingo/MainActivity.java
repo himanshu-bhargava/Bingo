@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
             mainIntent.putExtra(Constants.ROOM_ID, String.valueOf(id));
         } catch (Exception e) {
             Log.e("Error ", "Could not join the game via link");
-            Toast.makeText(this, "Invalid room id!!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.invalid_room_id, Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                 currentButton.setClickable(false);
             }
         }
-        startOrJoinGame.setText(Constants.CREATED_ROOM.equals(gameType) ? "Start Game" : "Join Game");
+        startOrJoinGame.setText(Constants.CREATED_ROOM.equals(gameType) ? getString(R.string.start_game) : getString(R.string.join_game));
     }
 
     private void onRoomCreation(BingoResponse bingoResponse) {
@@ -203,13 +203,13 @@ public class MainActivity extends AppCompatActivity {
             allPlayers.add(mySelf);
             startPolling();
         }
-        roomIdToShareTop.setText("Room: " + mainIntent.getStringExtra(Constants.ROOM_ID) + " share?");
-        roomIdToShareBottom.setText("Room: " + mainIntent.getStringExtra(Constants.ROOM_ID) + " share?");
+        roomIdToShareTop.setText(getString(R.string.room_id) + mainIntent.getStringExtra(Constants.ROOM_ID) + getString(R.string.share));
+        roomIdToShareBottom.setText(getString(R.string.room_id) + mainIntent.getStringExtra(Constants.ROOM_ID) + getString(R.string.share));
     }
 
     public void updateMySelfInPlayerGrid(Player player) {
         mySelf = player;
-        mySelf.setName("You");
+        mySelf.setName(getString(R.string.you));
         playerNameGrid.addView(createPlayerButton(mySelf));
         playerGettingUpdated = false;
     }
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         musicMedia.playClick();
         if (Constants.CREATED_ROOM.equals(gameType)) {
             if (allPlayers.size() < 2) {
-                Toast.makeText(this, "Wait for others to join!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.wait_for_others_to_join, Toast.LENGTH_SHORT).show();
                 return;
             }
             new StartGame(this).execute(room.getId().toString());
@@ -258,15 +258,15 @@ public class MainActivity extends AppCompatActivity {
     public void popWinnerAlert(String name) {
         if (isWinnerAnnounced) return;
         updateStats(name);
-        if ("you".equalsIgnoreCase(name)) {
+        if (getString(R.string.you).equalsIgnoreCase(name)) {
             musicMedia.playWin();
         } else {
-            musicMedia.playWin();
+            musicMedia.playLost();
         }
         isWinnerAnnounced = true;
         Glide.with(this).load(R.raw.sparkles).into(fireworks);
         fireWorksLayout.setVisibility(View.VISIBLE);
-        winnerAnnounce.setText(name + " won!!!");
+        winnerAnnounce.setText(name + getString(R.string.won));
     }
 
     private void updateStats(String winner) {
@@ -379,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
             initializeGameGridButton(thisButton, position);
         } else {
             if (!localGameStatus.equals(Status.started) || !isMyTurn) {
-                Toast.makeText(this, "You cannot play turn now!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.you_cannot_play_turn_now, Toast.LENGTH_SHORT).show();
             } else {
                 localGameStatus = Status.playingTurn;
                 isMyTurn = false;
@@ -508,10 +508,10 @@ public class MainActivity extends AppCompatActivity {
         String roomId = mainIntent.getStringExtra(Constants.ROOM_ID);
         Intent sharingIntent = new Intent(Intent.ACTION_SEND)
                 .setType("text/plain")
-                .putExtra(Intent.EXTRA_TEXT, "Click http://com.sb.bingo/joinroom?roomId=" + roomId + " to join!" +
-                        "\n Or enter: " + roomId + " to join the room")
-                .putExtra(Intent.EXTRA_SUBJECT, "Click to join bingo:");
-        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+                .putExtra(Intent.EXTRA_TEXT, String.format(String.valueOf(getString(R.string.room_share_message_format)),
+                        "http://com.sb.bingo/joinroom?roomId=", roomId, roomId))
+                .putExtra(Intent.EXTRA_SUBJECT, getString(R.string.click_to_join_bingo));
+        startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_via)));
     }
 
     @Override
@@ -535,14 +535,14 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
-        builder.setMessage("Do you want to Exit?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.do_you_want_to_exit);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();
             }
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
