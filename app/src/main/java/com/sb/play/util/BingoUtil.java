@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.appcompat.app.AlertDialog;
+
 public class BingoUtil {
     public static SQLiteDatabase getDatabase(Context context) {
         SQLiteDatabase bingoDatabase = context.openOrCreateDatabase(Constants.DbConstants.DB_NAME, Context.MODE_PRIVATE, null);
@@ -42,5 +44,13 @@ public class BingoUtil {
         return Arrays.asList(new ObjectMapper().readValue(
                 context.getAssets()
                         .open("about.json"), About[].class));
+    }
+
+    public static AlertDialog.Builder createSimpleAlert(Context context, String message) {
+        return new AlertDialog.Builder(context).setMessage(message);
+    }
+
+    public static int getRandom(int max) {
+        return (int) (Math.random() * max);
     }
 }

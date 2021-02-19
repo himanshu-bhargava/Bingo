@@ -29,7 +29,7 @@
                     android:layout_weight="1"
                     android:padding="4dp"
                     android:paddingStart="8dp"
-                    android:text="Total Game Played"
+                    android:text="@string/total_game_played"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -40,7 +40,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="4dp"
+                    android:paddingEnd="8dp"
                     android:text="0"
+                    android:textAlignment="viewEnd"
                     android:textColor="#FFFFFF"
                     android:textSize="17sp" />
             </TableRow>
@@ -61,7 +63,7 @@
                     android:layout_weight="1"
                     android:padding="4dp"
                     android:paddingStart="8dp"
-                    android:text="Won"
+                    android:text="@string/win"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -72,7 +74,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="4dp"
+                    android:paddingEnd="8dp"
                     android:text="0"
+                    android:textAlignment="viewEnd"
                     android:textColor="#FFFFFF"
                     android:textSize="17sp" />
             </TableRow>
@@ -93,7 +97,7 @@
                     android:layout_weight="1"
                     android:padding="4dp"
                     android:paddingStart="8dp"
-                    android:text="Lost"
+                    android:text="@string/lose"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -104,7 +108,45 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="4dp"
+                    android:paddingEnd="8dp"
                     android:text="0"
+                    android:textAlignment="viewEnd"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp" />
+            </TableRow>
+
+            <View
+                android:id="@+id/dividerThree"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="#575454" />
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/winPercentStaticTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:paddingStart="8dp"
+                android:text="Win %"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/winPercentTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="4dp"
+                    android:paddingEnd="8dp"
+                    android:text="0"
+                    android:textAlignment="viewEnd"
                     android:textColor="#FFFFFF"
                     android:textSize="17sp" />
             </TableRow>
@@ -131,7 +173,7 @@
                 android:layout_weight="1"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
-                android:text="Room"
+                android:text="@string/room"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
@@ -145,7 +187,7 @@
                 android:layout_weight="1"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
-                android:text="Players"
+                android:text="@string/players"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
@@ -159,7 +201,7 @@
                 android:layout_weight="1"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
-                android:text="Winner"
+                android:text="@string/winner"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
@@ -173,7 +215,7 @@
                 android:layout_weight="1"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
-                android:text="Time"
+                android:text="@string/time"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"

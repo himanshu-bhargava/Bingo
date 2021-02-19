@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -22,22 +23,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class GameStats extends AppCompatActivity {
 
+    private static final String TAG = "GameStats: ";
+
     private TableLayout overallStatView;
     private TextView totalTextView;
     private TextView wonTextView;
     private TextView lostTextView;
+    private TextView winPercentTextView;
+
+    private SQLiteDatabase bingoDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_stats);
-        getSupportActionBar().setTitle("Game Statistics");
-
-        overallStatView = findViewById(R.id.overallStatView);
-        totalTextView = findViewById(R.id.totalTextView);
-        wonTextView = findViewById(R.id.wonTextView);
-        lostTextView = findViewById(R.id.lostTextView);
-        SQLiteDatabase bingoDatabase = BingoUtil.getDatabase(this);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initialize();
         try {
             Cursor c = bingoDatabase.rawQuery(String.format("SELECT COUNT(*) FROM %s", Constants.DbConstants.TABLE_NAME), null);
             c.moveToNext();
@@ -51,8 +52,9 @@ public class GameStats extends AppCompatActivity {
             totalTextView.setText(String.valueOf(total));
             wonTextView.setText(String.valueOf(won));
             lostTextView.setText(String.valueOf(total - won));
+            winPercentTextView.setText((int) (((double) won / total) * 100) + "%");
         } catch (Exception e) {
-            Log.e("Error", "onCreate: Could not calculate the overall stat", e);
+            Log.e(TAG, "onCreate: Could not calculate the overall stat", e);
             overallStatView.setVisibility(View.GONE);
         }
 
@@ -72,11 +74,25 @@ public class GameStats extends AppCompatActivity {
                         c.getString(timeIndex)));
             }
         } catch (Exception e) {
-            Log.e("error", "GameStats onCreate: ", e);
+            Log.e(TAG, "GameStats onCreate: could not load game stats", e);
         }
         RecyclerView recyclerView = findViewById(R.id.statsLayout);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new StatAdaptor(this, statList));
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        finish();
+        return false;
+    }
+
+    private void initialize() {
+        overallStatView = findViewById(R.id.overallStatView);
+        totalTextView = findViewById(R.id.totalTextView);
+        wonTextView = findViewById(R.id.wonTextView);
+        lostTextView = findViewById(R.id.lostTextView);
+        winPercentTextView = findViewById(R.id.winPercentTextView);
+        bingoDatabase = BingoUtil.getDatabase(this);
     }
 }

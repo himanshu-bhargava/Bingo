@@ -35,7 +35,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
                     android:gravity="center_horizontal"
-                    android:text="version"
+                    android:text="@string/version"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp" />
 
@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="version comes here"
+                    android:text="@string/version_comes_here"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -61,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="Developers"
+                        android:text="@string/developers"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp" />
 
@@ -70,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:text="Saurav Bhargava"
+                        android:text="@string/saurav_bhargava"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp"
                         android:textStyle="normal" />
@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:gravity="center_horizontal"
-                        android:text="Himanshu Bhargava"
+                        android:text="@string/himanshu_bhargava"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp"
                         android:textStyle="normal" />
