@@ -35,6 +35,7 @@ import com.sb.play.bingo.models.Player;
 import com.sb.play.bingo.models.Room;
 import com.sb.play.bingo.models.Turn;
 import com.sb.play.bingo.services.BackendService;
+import com.sb.play.util.BingoDbUtil;
 import com.sb.play.util.BingoUtil;
 import com.sb.play.util.Constants;
 
@@ -264,13 +265,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateStats(String winner) {
-        SQLiteDatabase bingoDatabase = BingoUtil.getDatabase(this);
+        SQLiteDatabase bingoDatabase = BingoDbUtil.getDatabase(this);
         try {
-            bingoDatabase.execSQL(String.format("INSERT INTO %s VALUES('%s', '%s', '%s', '%s')",
-                    Constants.DbConstants.TABLE_NAME,
-                    mainIntent.getStringExtra(Constants.ROOM_ID),
-                    getAllPlayersNameAsString(),
-                    winner, System.currentTimeMillis()));
+            BingoDbUtil.insertRecord(bingoDatabase, mainIntent.getStringExtra(Constants.ROOM_ID),
+                    getAllPlayersNameAsString(), winner);
             Log.i("stat", "updateStats: stats updated successfully");
         } catch (Exception e) {
             Log.e("error", "Could not update stats", e);
