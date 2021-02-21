@@ -26,9 +26,6 @@ public class AboutGame extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_game);
-        Intent intent = getIntent();
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("About");
         readQuesAns();
         versionView = findViewById(R.id.versionView);
         versionView.setText(getVersion());

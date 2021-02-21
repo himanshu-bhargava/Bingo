@@ -28,7 +28,7 @@ public class BingoDbUtil {
         if (!sharedPreferences.getBoolean(Constants.DbConstants.IS_IMPORTED, false)) {
             Log.i(TAG, "importOldStats: importing old data to new table");
             try {
-                Cursor c = bingoDatabase.rawQuery(String.format("SELECT * FROM %s ORDER BY %s DESC LIMIT 200",
+                Cursor c = bingoDatabase.rawQuery(String.format("SELECT * FROM %s ",
                         Constants.DbConstants.OLD_TABLE_NAME,
                         Constants.DbConstants.ROOM_ID_COLUMN), null);
                 int roomIndex = c.getColumnIndex(Constants.DbConstants.ROOM_ID_COLUMN);
@@ -65,7 +65,7 @@ public class BingoDbUtil {
 
     public static Cursor getWinCountCursor(SQLiteDatabase bingoDatabase) {
         return bingoDatabase.rawQuery(String.format("SELECT COUNT(*) FROM %s where winner='%s'",
-                Constants.DbConstants.TABLE_NAME, "You"), null);
+                Constants.DbConstants.TABLE_NAME, Constants.YOU), null);
     }
 
     public static Cursor getAllGameDetailsCursor(SQLiteDatabase bingoDatabase) {

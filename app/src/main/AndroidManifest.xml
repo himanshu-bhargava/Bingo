@@ -10,8 +10,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AboutGame"></activity>
-        <activity android:name=".GameStats" />
+        <activity
+            android:name=".AboutGame"
+            android:label="About"
+            android:parentActivityName=".FirstScreen"></activity>
+        <activity
+            android:name=".GameStats"
+            android:label="Game Statistics"
+            android:parentActivityName=".FirstScreen" />
         <activity android:name=".FirstScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,6 +39,7 @@
             </intent-filter>
         </activity>
     </application>
+
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-permission android:name="android.permission.INTERNET" />

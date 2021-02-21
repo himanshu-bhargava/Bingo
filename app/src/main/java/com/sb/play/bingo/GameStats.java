@@ -26,17 +26,18 @@ public class GameStats extends AppCompatActivity {
     private TextView totalTextView;
     private TextView wonTextView;
     private TextView lostTextView;
+    private TextView winPercentTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_stats);
-        getSupportActionBar().setTitle("Game Statistics");
 
         overallStatView = findViewById(R.id.overallStatView);
         totalTextView = findViewById(R.id.totalTextView);
         wonTextView = findViewById(R.id.wonTextView);
         lostTextView = findViewById(R.id.lostTextView);
+        winPercentTextView = findViewById(R.id.winPercentTextView);
         SQLiteDatabase bingoDatabase = BingoDbUtil.getDatabase(this);
         // to update the table structure and keeping the old record.
         BingoDbUtil.importOldStats(this, bingoDatabase);
@@ -52,6 +53,7 @@ public class GameStats extends AppCompatActivity {
             totalTextView.setText(String.valueOf(total));
             wonTextView.setText(String.valueOf(won));
             lostTextView.setText(String.valueOf(total - won));
+            winPercentTextView.setText(Math.round(((double) won / total) * 100) + "%");
         } catch (Exception e) {
             Log.e("Error", "onCreate: Could not calculate the overall stat", e);
             overallStatView.setVisibility(View.GONE);
@@ -76,7 +78,8 @@ public class GameStats extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.statsLayout);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new StatAdaptor(this, statList));
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1,
+                GridLayoutManager.VERTICAL, false));
     }
 
 }
