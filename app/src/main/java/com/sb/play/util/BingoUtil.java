@@ -35,4 +35,10 @@ public class BingoUtil {
                 context.getAssets()
                         .open("about.json"), About[].class));
     }
+
+    public static String capitalize(String input) {
+        char[] array = input.toLowerCase().toCharArray();
+        array[0] = Character.toUpperCase(array[0]);
+        return String.valueOf(array);
+    }
 }

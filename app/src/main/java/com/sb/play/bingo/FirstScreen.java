@@ -1,7 +1,6 @@
 package com.sb.play.bingo;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -13,10 +12,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.sb.play.bingo.models.BingoResponse;
 import com.sb.play.bingo.services.BackendService;
+import com.sb.play.util.BingoUtil;
 import com.sb.play.util.Constants;
 
 import androidx.appcompat.app.AlertDialog;
@@ -24,15 +23,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class FirstScreen extends AppCompatActivity implements View.OnKeyListener {
 
-    private static final String DEFAULT_NAME = "unknown";
-    public static String myName;
     private final BackendService backendService = new BackendService();
-    Button createRoomButton;
-    Button joinRoomButton;
-    EditText myNameEditText;
-    EditText roomId;
-    SharedPreferences sharedPreferences;
-    MediaPlayer mediaPlayer;
+    private Button createRoomButton;
+    private Button joinRoomButton;
+    private EditText myNameEditText;
+    private EditText roomId;
+    private SharedPreferences sharedPreferences;
+    private MediaPlayer mediaPlayer;
+    public static String myName;
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -58,8 +56,7 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
 
     private void fetchAndAssignSavedName() {
         Log.i("fetchAndAssignSavedName", "fetching existing name");
-        myName = sharedPreferences.getString(Constants.MY_NAME, DEFAULT_NAME);
-        saveNameInMemory(myName);
+        myName = sharedPreferences.getString(Constants.MY_NAME, Constants.DEFAULT_NAME);
         saveNameInMemory(myName);
         myNameEditText.setText(myName);
     }
@@ -71,17 +68,22 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
     public void submitUserName(View view) {
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.click);
         mediaPlayer.start();
-        if (myNameEditText == null) {
-            Toast.makeText(this, "Not initialized yet", Toast.LENGTH_SHORT).show();
-        }
-        Object updatedName = myNameEditText.getText().toString();
-        if (updatedName == null || updatedName.toString().length() < 4) {
-            Toast.makeText(this, "Please enter a name with length>4", Toast.LENGTH_SHORT).show();
+        String updatedName = myNameEditText.getText().toString().trim();
+        if (updatedName.length() < 2) {
+            buildAlert("Name is too short", "Please use at least 2 characters.", false);
+            return;
+        } else if (updatedName.length() > 10) {
+            buildAlert("Name is too long", "Please use at most 10 characters.", false);
+            return;
+        } else if (Constants.YOU.equalsIgnoreCase(updatedName)) {
+            buildAlert("Invalid Name", "This name is reserved and is not allowed to be used.", false);
             return;
         }
-        myName = updatedName.toString();
-        saveNameInMemory(updatedName.toString());
-        new AlertDialog.Builder(this).setMessage("Saved your name!").create().show();
+        myName = BingoUtil.capitalize(updatedName);
+        myNameEditText.setText(myName);
+        saveNameInMemory(myName);
+        buildAlert("Saved your name",
+                "Your name is saved. This will be used in future games as well.", true);
     }
 
     public void joinRoom(View view) {
@@ -89,7 +91,8 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
         mediaPlayer.start();
         String roomIdNumber = roomId.getText().toString();
         if (roomIdNumber.isEmpty()) {
-            new AlertDialog.Builder(this).setMessage("Please enter a room id!!!").show();
+            buildAlert("Empty room id",
+                    "Please enter a room id to join the game.", false);
             return;
         }
         Intent idIntent = new Intent(getApplicationContext(), MainActivity.class);
@@ -133,7 +136,8 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
                 @Override
                 public void run() {
                     if (bingoResponse == null) {
-                        createSimpleAlert("Could not create the room please try again later!!!");
+                        buildAlert("Could not join room",
+                                "Either the room id is wrong or the game is already started", false);
                         return;
                     }
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -145,12 +149,23 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
             });
         }
     }
-    public void launchStatActivity(View view){
+
+    public void launchStatActivity(View view) {
         Intent idIntent = new Intent(getApplicationContext(), GameStats.class);
         startActivity(idIntent);
     }
-    public void about(View view){
-        Intent intent=new Intent(this,AboutGame.class);
+
+    public void about(View view) {
+        Intent intent = new Intent(this, AboutGame.class);
         startActivity(intent);
     }
+
+    private void buildAlert(String title, String message, boolean isInfo) {
+        new AlertDialog.Builder(this).setTitle(title).setMessage(message)
+                .setIcon(isInfo ? android.R.drawable.ic_dialog_info : android.R.drawable.ic_dialog_alert)
+                .setCancelable(false)
+                .setPositiveButton("ok", null)
+                .create().show();
+    }
+
 }

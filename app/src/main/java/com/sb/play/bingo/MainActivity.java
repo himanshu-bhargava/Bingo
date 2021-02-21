@@ -155,9 +155,9 @@ public class MainActivity extends AppCompatActivity {
         startOrJoinGame = findViewById(R.id.goGame);
         roomIdToShareBottom = findViewById(R.id.roomIdToShareBottom);
         roomIdToShareTop = findViewById(R.id.roomIdToShareTop);
-        bingoResponse = (BingoResponse) mainIntent.getSerializableExtra("Response");
+        bingoResponse = (BingoResponse) mainIntent.getSerializableExtra(Constants.RESPONSE);
         gameType = mainIntent.getStringExtra(Constants.TYPE_OF_GAME);
-        myName = getSharedPreferences(Constants.MY_APP_NAME, MODE_PRIVATE).getString(Constants.MY_NAME, Constants.UNKNOWN);
+        myName = getSharedPreferences(Constants.MY_APP_NAME, MODE_PRIVATE).getString(Constants.MY_NAME, Constants.DEFAULT_NAME);
     }
 
     private void initializeStickerView() {
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateMySelfInPlayerGrid(Player player) {
         mySelf = player;
-        mySelf.setName("You");
+        mySelf.setName(Constants.YOU);
         playerNameGrid.addView(createPlayerButton(mySelf));
         playerGettingUpdated = false;
     }
