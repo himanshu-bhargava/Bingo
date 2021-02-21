@@ -54,7 +54,7 @@ public class GameStats extends AppCompatActivity {
             totalTextView.setText(String.valueOf(total));
             wonTextView.setText(String.valueOf(won));
             lostTextView.setText(String.valueOf(total - won));
-            winPercentTextView.setText((int) (((double) won / total) * 100) + "%");
+            winPercentTextView.setText(Math.round(((double) won / total) * 100) + "%");
         } catch (Exception e) {
             Log.e("Error", "onCreate: Could not calculate the overall stat", e);
             overallStatView.setVisibility(View.GONE);

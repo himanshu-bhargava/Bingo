@@ -50,7 +50,6 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
         roomId = findViewById(R.id.roomId);
         myNameEditText = findViewById(R.id.myNameEditText);
         sharedPreferences = getSharedPreferences(Constants.MY_APP_NAME, Context.MODE_PRIVATE);
-        Log.i("Test", "" + myNameEditText.getText());
         fetchAndAssignSavedName();
     }
 
@@ -71,19 +70,17 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
         String updatedName = myNameEditText.getText().toString().trim();
         if (updatedName.length() < 2) {
             buildAlert("Name is too short", "Please use at least 2 characters.", false);
-            return;
         } else if (updatedName.length() > 10) {
             buildAlert("Name is too long", "Please use at most 10 characters.", false);
-            return;
         } else if (Constants.YOU.equalsIgnoreCase(updatedName)) {
             buildAlert("Invalid Name", "This name is reserved and is not allowed to be used.", false);
-            return;
+        } else {
+            myName = BingoUtil.capitalize(updatedName);
+            myNameEditText.setText(myName);
+            saveNameInMemory(myName);
+            buildAlert("Saved your name",
+                    "Your name is saved. This will be used in future games as well.", true);
         }
-        myName = BingoUtil.capitalize(updatedName);
-        myNameEditText.setText(myName);
-        saveNameInMemory(myName);
-        buildAlert("Saved your name",
-                "Your name is saved. This will be used in future games as well.", true);
     }
 
     public void joinRoom(View view) {
@@ -106,10 +103,6 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
         mediaPlayer.start();
         Log.i("create room", "createRoom: here");
         new CreateRoom().execute();
-    }
-
-    private AlertDialog.Builder createSimpleAlert(String input) {
-        return new AlertDialog.Builder(FirstScreen.this).setMessage(input);
     }
 
     private class CreateRoom extends AsyncTask<String, String, BingoResponse> {
@@ -160,6 +153,10 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
         startActivity(intent);
     }
 
+    private AlertDialog.Builder createSimpleAlert(String input) {
+        return new AlertDialog.Builder(FirstScreen.this).setMessage(input);
+    }
+
     private void buildAlert(String title, String message, boolean isInfo) {
         new AlertDialog.Builder(this).setTitle(title).setMessage(message)
                 .setIcon(isInfo ? android.R.drawable.ic_dialog_info : android.R.drawable.ic_dialog_alert)
@@ -167,5 +164,4 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
                 .setPositiveButton("ok", null)
                 .create().show();
     }
-
 }
