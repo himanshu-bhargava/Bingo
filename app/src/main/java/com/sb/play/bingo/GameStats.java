@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.sb.play.adaptor.StatAdaptor;
 import com.sb.play.bingo.models.Stat;
-import com.sb.play.util.BingoUtil;
+import com.sb.play.util.BingoDbUtil;
 import com.sb.play.util.Constants;
 
 import java.util.ArrayList;
@@ -37,14 +37,15 @@ public class GameStats extends AppCompatActivity {
         totalTextView = findViewById(R.id.totalTextView);
         wonTextView = findViewById(R.id.wonTextView);
         lostTextView = findViewById(R.id.lostTextView);
-        SQLiteDatabase bingoDatabase = BingoUtil.getDatabase(this);
+        SQLiteDatabase bingoDatabase = BingoDbUtil.getDatabase(this);
+        // to update the table structure and keeping the old record.
+        BingoDbUtil.importOldStats(this, bingoDatabase);
         try {
-            Cursor c = bingoDatabase.rawQuery(String.format("SELECT COUNT(*) FROM %s", Constants.DbConstants.TABLE_NAME), null);
+            Cursor c = BingoDbUtil.getTotalGamesCursor(bingoDatabase);
             c.moveToNext();
             long total = c.getLong(0);
 
-            c = bingoDatabase.rawQuery(String.format("SELECT COUNT(*) FROM %s where winner='%s'",
-                    Constants.DbConstants.TABLE_NAME, "You"), null);
+            c = BingoDbUtil.getWinCountCursor(bingoDatabase);
             c.moveToNext();
             long won = c.getLong(0);
 
@@ -58,9 +59,7 @@ public class GameStats extends AppCompatActivity {
 
         List<Stat> statList = new ArrayList<>();
         try {
-            Cursor c = bingoDatabase.rawQuery(String.format("SELECT * FROM %s ORDER BY %s DESC LIMIT 200",
-                    Constants.DbConstants.TABLE_NAME,
-                    Constants.DbConstants.ROOM_ID_COLUMN), null);
+            Cursor c = BingoDbUtil.getAllGameDetailsCursor(bingoDatabase);
             int roomIndex = c.getColumnIndex(Constants.DbConstants.ROOM_ID_COLUMN);
             int playersIndex = c.getColumnIndex(Constants.DbConstants.PLAYERS_COLUMN);
             int winnerIndex = c.getColumnIndex(Constants.DbConstants.WINNER_COLUMN);
@@ -69,7 +68,7 @@ public class GameStats extends AppCompatActivity {
                 statList.add(new Stat(c.getString(roomIndex),
                         c.getString(playersIndex),
                         c.getString(winnerIndex),
-                        c.getString(timeIndex)));
+                        c.getLong(timeIndex)));
             }
         } catch (Exception e) {
             Log.e("error", "GameStats onCreate: ", e);
@@ -79,4 +78,5 @@ public class GameStats extends AppCompatActivity {
         recyclerView.setAdapter(new StatAdaptor(this, statList));
         recyclerView.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
     }
+
 }

@@ -1,6 +1,5 @@
 package com.sb.play.bingo.models;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -43,11 +42,11 @@ public class Stat {
         this.time = time;
     }
 
-    public Stat(String room, String players, String winner, String time) {
+    public Stat(String room, String players, String winner, Long time) {
         this.room = room;
         this.players = Arrays.asList(players.split(","));
         this.winner = winner;
-        this.time = new Date(Long.valueOf(time));
+        this.time = new Date(time);
     }
 
     @Override

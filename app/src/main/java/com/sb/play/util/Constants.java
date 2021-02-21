@@ -17,13 +17,14 @@ public class Constants {
 
     public static class DbConstants {
         public static final String DB_NAME = "bingoDB";
-        public static final String TABLE_NAME = "stats";
+        public static final String TABLE_NAME = "new_stats";
+        public static final String OLD_TABLE_NAME = "stats";
         public static final String ROOM_ID_COLUMN = "room_id";
         public static final String PLAYERS_COLUMN = "players";
         public static final String WINNER_COLUMN = "winner";
         public static final String END_TIME_COLUMN = "endTime";
+        public static final String IS_IMPORTED = "isImported";
     }
-
 
 
     public static class LocalBackendParam extends BackendParam {
