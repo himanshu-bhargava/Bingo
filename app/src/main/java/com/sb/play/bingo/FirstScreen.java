@@ -129,8 +129,8 @@ public class FirstScreen extends AppCompatActivity implements View.OnKeyListener
                 @Override
                 public void run() {
                     if (bingoResponse == null) {
-                        buildAlert("Could not join room",
-                                "Either the room id is wrong or the game is already started", false);
+                        buildAlert("Could not create room",
+                                "Please make sure you are connected to internet and then try again.", false);
                         return;
                     }
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);

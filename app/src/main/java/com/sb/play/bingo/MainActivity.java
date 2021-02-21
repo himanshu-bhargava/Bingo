@@ -58,46 +58,57 @@ public class MainActivity extends AppCompatActivity {
 
     private final boolean[][] crossed = new boolean[5][5];
     private final Position[] positions = new Position[25];
-    BingoResponse bingoResponse;
-    MediaPlayer mediaPlayerClick;
-    MediaPlayer mediaPlayerBubble;
-    MediaPlayer mediaPlayerWin;
-    MediaPlayer mediaPlayerLost;
-    Vibrator v;
-    Animation rotate;
     private final BackendService backendService = new BackendService();
     private final Set<Player> allPlayers = Collections.synchronizedSet(new HashSet<>());
-    private String myName;
-    private String gameType;
-    volatile private Status localGameStatus = Status.loading;
-    private Player mySelf;
-    volatile private Room room;
+
+    private MediaPlayer mediaPlayerClick;
+    private MediaPlayer mediaPlayerBubble;
+    private MediaPlayer mediaPlayerWin;
+    private MediaPlayer mediaPlayerLost;
+    private Animation rotate;
+    private Animation bounce;
+    private Vibrator v;
+
     volatile private boolean isMyTurn = false;
+    volatile private boolean isRemoteTurnCompleted = false;
+    volatile private Status localGameStatus = Status.loading;
+    volatile private Room room;
+
+    private BingoResponse bingoResponse;
+    private Player mySelf;
+
+    private boolean playerGettingUpdated = false;
+    private boolean isWinnerAnnounced;
+
     private int bingoCounter = 0;
     private int gameGridValueCounter;
     private int localStepCounter = 0;
+    private Long sendingEmojiTo;
+
+
+    private String myName;
+    private String gameType;
+
     private GridLayout gameGrid;
     private GridLayout bingoGrid;
     private LinearLayout playerNameGrid;
+    private LinearLayout stickerHolderView;
+    private LinearLayout receivedEmojiLayout;
+    private ConstraintLayout fireWorksLayout;
+    private HorizontalScrollView stickerView;
+
     private Button startOrJoinGame;
     private Button customFill;
     private Button simpleFill;
     private Button randomFill;
-    private Intent mainIntent;
     private Button roomIdToShareBottom;
+    private Button roomIdToShareTop;
     private TextView winnerAnnounce;
     private TextView senderNameView;
-    private Button roomIdToShareTop;
-    private ConstraintLayout fireWorksLayout;
     private ImageView fireworks;
-    volatile private boolean isRemoteTurnCompleted = false;
-    private boolean playerGettingUpdated = false;
-    private boolean isWinnerAnnounced;
-    private HorizontalScrollView stickerView;
-    private LinearLayout stickerHolderView;
     private ImageView receivedEmojiImageView;
-    private LinearLayout receivedEmojiLayout;
-    private Long sendingEmojiTo;
+
+    private Intent mainIntent;
 
     private static int getRandom(int max) {
         return (int) (Math.random() * max);
@@ -180,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayerLost = MediaPlayer.create(getApplicationContext(), R.raw.lost);
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         rotate = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+        bounce = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce);
     }
 
     private void onRoomCreation(BingoResponse bingoResponse) {
@@ -262,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this).load(R.raw.sparkles).into(fireworks);
         fireWorksLayout.setVisibility(View.VISIBLE);
         winnerAnnounce.setText(name + " won!");
+        bounceView(winnerAnnounce);
     }
 
     private void updateStats(String winner) {
@@ -400,6 +413,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void rotateView(View view) {
         view.startAnimation(rotate);
+    }
+
+    public void bounceView(View view){
+        Log.i("Bounce", "bounceView: ");
+        view.startAnimation(bounce);
     }
 
     private void playSingleTurn(Button thisButton, Position position) {
