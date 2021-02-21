@@ -32,7 +32,6 @@ public class GameStats extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_stats);
-        getSupportActionBar().setTitle("Game Statistics");
 
         overallStatView = findViewById(R.id.overallStatView);
         totalTextView = findViewById(R.id.totalTextView);
